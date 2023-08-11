@@ -20,6 +20,8 @@ from graph import Digraph, Node, WeightedEdge
 # represented?
 #
 # Answer:
+# Nodes ares the MIT buldings and the WeightEdges are the one way roads from
+# one building to another, including the total and outdoor distances
 #
 
 
@@ -42,12 +44,34 @@ def load_map(map_filename):
     Returns:
         a Digraph representing the map
     """
-
-    # TODO
     print("Loading map from file...")
+
+    digraph = Digraph()
+    with open(map_filename) as file:
+        for line in file:
+            src, dest, total_dist, outdoor_dist = line.split(' ')
+            src_node = Node(src)
+            dest_node = Node(dest)
+            edge = WeightedEdge(src_node,
+                                dest_node,
+                                int(total_dist),
+                                int(outdoor_dist))
+
+            # Check if the digraph has these nodes already
+            if not digraph.has_node(src_node):
+                digraph.add_node(src_node)
+            if not digraph.has_node(dest_node):
+                digraph.add_node(dest_node)
+
+            digraph.add_edge(edge)
+
+    return digraph
 
 # Problem 2c: Testing load_map
 # Include the lines used to test load_map below, but comment them out
+
+
+# print(load_map('mit_map.txt'))
 
 
 #

@@ -1,0 +1,9 @@
+# so i can make test files
+test*
+
+.DS_Store
+__pycache__/
+.vscode
+\#*#
+.\#*
+*~

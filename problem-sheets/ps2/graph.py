@@ -97,9 +97,9 @@ class Digraph(object):
         already in the graph."""
         if self.has_node(node):
             raise ValueError('Duplicate node')
-        else:
-            self.nodes.add(node)
-            self.edges[node] = []
+
+        self.nodes.add(node)
+        self.edges[node] = []
 
     def add_edge(self, edge):
         """Adds an Edge or WeightedEdge instance to the Digraph. Raises a
@@ -107,8 +107,10 @@ class Digraph(object):
         in the  graph."""
         src = edge.get_source()
         dest = edge.get_destination()
+
         if not (src in self.nodes and dest in self.nodes):
             raise ValueError('Node not in graph')
+
         self.edges[src].append(edge)
 
 
