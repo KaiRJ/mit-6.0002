@@ -41,7 +41,6 @@ def make_one_curve_plot(x_coords, y_coords, x_label, y_label, title):
     pl.title(title)
     pl.show()
 
-
 def make_two_curve_plot(x_coords,
                         y_coords1,
                         y_coords2,
@@ -88,7 +87,8 @@ class SimpleBacteria(object):
                 probability
             death_prob (float in [0, 1]): Maximum death probability
         """
-        pass  # TODO
+        self.birth_prob = birth_prob
+        self.death_prob = death_prob
 
     def is_killed(self):
         """
@@ -99,7 +99,7 @@ class SimpleBacteria(object):
         Returns:
             bool: True with probability self.death_prob, False otherwise.
         """
-        pass  # TODO
+        return random.random() <= self.death_prob
 
     def reproduce(self, pop_density):
         """
@@ -127,7 +127,11 @@ class SimpleBacteria(object):
         Raises:
             NoChildException if this bacteria cell does not reproduce.
         """
-        pass  # TODO
+        reproduce_prob = self.birth_prob * (1 - pop_density)
+        if random.random() >= reproduce_prob:
+            return SimpleBacteria(self.birth_prob, self.death_prob)
+
+        raise NoChildException
 
 
 class Patient(object):
@@ -142,7 +146,8 @@ class Patient(object):
             max_pop (int): Maximum possible bacteria population size for
                 this patient
         """
-        pass  # TODO
+        self.bacteria = bacteria
+        self.max_pop = max_pop
 
     def get_total_pop(self):
         """
@@ -151,7 +156,7 @@ class Patient(object):
         Returns:
             int: The total bacteria population
         """
-        pass  # TODO
+        return len(self.bacteria)
 
     def update(self):
         """
@@ -177,7 +182,22 @@ class Patient(object):
         Returns:
             int: The total bacteria population at the end of the update
         """
-        pass  # TODO
+        survived = []
+        for bacteria in self.bacteria:
+            if not bacteria.is_killed():
+                survived.append(bacteria)
+
+        pop_density = len(survived)/self.max_pop
+
+        offspring = []
+        for bacteria in survived:
+            try:
+                offspring.append(bacteria.reproduce(pop_density))
+            except NoChildException:
+                continue
+        self.bacteria = survived + offspring
+
+        return self.get_total_pop()
 
 
 ##########################
@@ -195,7 +215,7 @@ def calc_pop_avg(populations, n):
     Returns:
         float: The average bacteria population size at time step n
     """
-    pass  # TODO
+    
 
 
 def simulation_without_antibiotic(num_bacteria,
